@@ -1,6 +1,23 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# NTT News
 
-## Getting Started
+Um site de notícias moderno e responsivo desenvolvido com tecnologias web de ponta.
+
+## 📖 Descrição
+
+O **NTT News** é uma aplicação web para visualização e filtragem de notícias. O projeto oferece uma interface intuitiva e amigável para explorar notícias por categorias, com foco em performance e experiência do usuário.
+
+## 🛠️ Tecnologias
+
+Este projeto utiliza as seguintes tecnologias:
+
+- **[Next.js](https://nextjs.org)** - Framework React com suporte a SSR e geração estática
+- **[Tailwind CSS](https://tailwindcss.com)** - Utility-first CSS framework para estilização
+- **[Material Icons](https://fonts.google.com/icons)** - Ícones de alta qualidade do Material Design
+- **[Zod](https://zod.dev)** - Validação de dados com TypeScript
+- **[Prettier](https://prettier.io)** - Formatação automática de código
+- **[ESLint](https://eslint.org)** - Linter para manter qualidade e consistência do código
+
+## 🚀 Getting Started
 
 First, run the development server:
 
