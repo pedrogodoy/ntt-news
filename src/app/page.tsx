@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import NewspaperIcon from '@mui/icons-material/Newspaper';
 import SearchIcon from '@mui/icons-material/Search';
 import { NewsCard } from '@/components/NewsCard';
@@ -8,90 +8,32 @@ import { NewsCardSkeleton } from '@/components/NewsCardSkeleton';
 import { CategoryFilter } from '@/components/CategoryFilter';
 import type { Article } from '@/types/news';
 
-const MOCK_ARTICLES: Article[] = [
-  {
-    id: '1',
-    title: 'Next.js 15 traz melhorias significativas de performance',
-    description:
-      'A nova versão do framework Next.js chega com Turbopack estável, melhorias no caching e novas APIs de otimização que prometem reduzir o tempo de build em até 70%.',
-    url: 'https://example.com/nextjs-15',
-    imageUrl: 'https://placehold.co/600x400/3b82f6/ffffff?text=Tech',
-    source: 'Tech News',
-    publishedAt: '2026-04-07T10:00:00.000Z',
-    category: 'technology',
-  },
-  {
-    id: '2',
-    title: 'Mercado de ações atinge recorde histórico em abril',
-    description:
-      'Bolsas de valores ao redor do mundo registram alta expressiva impulsionadas por resultados corporativos acima das expectativas e queda nos juros globais.',
-    url: 'https://example.com/stock-market',
-    imageUrl: 'https://placehold.co/600x400/22c55e/ffffff?text=Business',
-    source: 'Economia Hoje',
-    publishedAt: '2026-04-07T08:30:00.000Z',
-    category: 'business',
-  },
-  {
-    id: '3',
-    title: 'Descoberta científica pode revolucionar tratamento do câncer',
-    description:
-      'Pesquisadores da USP anunciam um novo mecanismo de detecção precoce baseado em inteligência artificial com 97% de precisão em testes clínicos.',
-    url: 'https://example.com/cancer-research',
-    imageUrl: 'https://placehold.co/600x400/a855f7/ffffff?text=Science',
-    source: 'Ciência BR',
-    publishedAt: '2026-04-06T15:00:00.000Z',
-    category: 'science',
-  },
-  {
-    id: '4',
-    title: 'Brasil garante vaga nas semifinais da Copa do Mundo',
-    description:
-      'A seleção brasileira venceu por 3x1 e avançou para a fase semifinal do torneio, com destaque para o hat-trick de Vinicius Jr.',
-    url: 'https://example.com/brazil-soccer',
-    imageUrl: 'https://placehold.co/600x400/f59e0b/ffffff?text=Sports',
-    source: 'Esporte Total',
-    publishedAt: '2026-04-06T22:00:00.000Z',
-    category: 'sports',
-  },
-  {
-    id: '5',
-    title: 'Novo estudo aponta benefícios da dieta mediterrânea para longevidade',
-    description:
-      'Pesquisa acompanhou 10 mil pessoas por 20 anos e concluiu que hábitos alimentares mediterrâneos reduzem em 35% o risco de doenças cardiovasculares.',
-    url: 'https://example.com/mediterranean-diet',
-    imageUrl: 'https://placehold.co/600x400/ef4444/ffffff?text=Health',
-    source: 'Saúde & Vida',
-    publishedAt: '2026-04-05T12:00:00.000Z',
-    category: 'health',
-  },
-  {
-    id: '6',
-    title: 'Festival de cinema de Cannes anuncia filmes brasileiros na seleção oficial',
-    description:
-      'Três produções brasileiras disputarão a Palma de Ouro neste ano, o maior número de representações do país no festival em toda sua história.',
-    url: 'https://example.com/cannes-brazil',
-    imageUrl: 'https://placehold.co/600x400/ec4899/ffffff?text=Entertainment',
-    source: 'Cultura Viva',
-    publishedAt: '2026-04-05T09:00:00.000Z',
-    category: 'entertainment',
-  },
-];
-
 type Category = Article['category'] | 'all';
 
 export default function NewsPage() {
+  const [articles, setArticles] = useState<Article[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<Category>('all');
   const [searchQuery, setSearchQuery] = useState('');
-  const [isLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const filteredArticles = MOCK_ARTICLES.filter((article) => {
-    const matchesCategory = selectedCategory === 'all' || article.category === selectedCategory;
-    const matchesSearch =
+  useEffect(() => {
+    setIsLoading(true);
+
+    const params = new URLSearchParams();
+    if (selectedCategory !== 'all') params.set('category', selectedCategory);
+
+    fetch(`/api/news?${params}`)
+      .then((res) => res.json())
+      .then((data) => setArticles(data.articles))
+      .finally(() => setIsLoading(false));
+  }, [selectedCategory]);
+
+  const filteredArticles = articles.filter(
+    (article) =>
       searchQuery === '' ||
       article.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      article.description.toLowerCase().includes(searchQuery.toLowerCase());
-    return matchesCategory && matchesSearch;
-  });
+      article.excerpt.toLowerCase().includes(searchQuery.toLowerCase()),
+  );
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
@@ -127,7 +69,7 @@ export default function NewsPage() {
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {isLoading
             ? Array.from({ length: 6 }).map((_, i) => <NewsCardSkeleton key={i} />)
-            : filteredArticles.map((article) => <NewsCard key={article.id} article={article} />)}
+            : filteredArticles.map((article) => <NewsCard key={article.slug} article={article} />)}
         </div>
 
         {!isLoading && filteredArticles.length === 0 && (

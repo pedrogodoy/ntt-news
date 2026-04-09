@@ -6,12 +6,13 @@ type Category = Article['category'] | 'all';
 
 const CATEGORIES: { value: Category; label: string }[] = [
   { value: 'all', label: 'Todas' },
-  { value: 'technology', label: 'Tecnologia' },
-  { value: 'business', label: 'Negócios' },
-  { value: 'sports', label: 'Esportes' },
-  { value: 'entertainment', label: 'Entretenimento' },
-  { value: 'science', label: 'Ciência' },
-  { value: 'health', label: 'Saúde' },
+  { value: 'Tecnologia', label: 'Tecnologia' },
+  { value: 'Política', label: 'Política' },
+  { value: 'Esportes', label: 'Esportes' },
+  { value: 'Money', label: 'Money' },
+  { value: 'Mundo', label: 'Mundo' },
+  { value: 'Agro', label: 'Agro' },
+  { value: 'Cultura', label: 'Cultura' },
 ];
 
 interface CategoryFilterProps {
