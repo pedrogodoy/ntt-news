@@ -8,7 +8,7 @@ interface NewsCardProps {
 }
 
 export function NewsCard({ article }: NewsCardProps) {
-  const formattedDate = new Date(article.publishedAt).toLocaleDateString('pt-BR', {
+  const formattedDate = new Date(article.date).toLocaleDateString('pt-BR', {
     day: '2-digit',
     month: 'short',
     year: 'numeric',
@@ -16,15 +16,13 @@ export function NewsCard({ article }: NewsCardProps) {
 
   return (
     <article className="flex flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm transition-shadow hover:shadow-md dark:border-gray-700 dark:bg-gray-900">
-      {article.imageUrl && (
-        <div className="h-48 w-full overflow-hidden bg-gray-100 dark:bg-gray-800">
-          <img
-            src={article.imageUrl}
-            alt={article.title}
-            className="h-full w-full object-cover"
-          />
-        </div>
-      )}
+      <div className="h-48 w-full overflow-hidden bg-gray-100 dark:bg-gray-800">
+        <img
+          src={article.imageUrl}
+          alt={article.imageAlt}
+          className="h-full w-full object-cover"
+        />
+      </div>
 
       <div className="flex flex-1 flex-col gap-3 p-5">
         <div className="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
@@ -43,17 +41,15 @@ export function NewsCard({ article }: NewsCardProps) {
         </h2>
 
         <p className="line-clamp-3 flex-1 text-sm leading-relaxed text-gray-600 dark:text-gray-400">
-          {article.description}
+          {article.excerpt}
         </p>
 
         <div className="flex items-center justify-between pt-2">
           <span className="text-xs font-medium text-gray-500 dark:text-gray-400">
-            {article.source}
+            {article.section}
           </span>
           <a
-            href={article.url}
-            target="_blank"
-            rel="noopener noreferrer"
+            href={`/news/${article.slug}`}
             className="flex items-center gap-1 rounded-lg bg-blue-600 px-3 py-1.5 text-xs font-medium text-white transition-colors hover:bg-blue-700"
           >
             Ler mais
