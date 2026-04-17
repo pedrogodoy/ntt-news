@@ -16,4 +16,10 @@ export const handlers = [
       totalResults: filtered.length,
     });
   }),
+
+  http.get('/api/news/:slug', ({ params }) => {
+    const article = noticias.find((n) => n.slug === params.slug);
+    if (!article) return new HttpResponse(null, { status: 404 });
+    return HttpResponse.json(article);
+  }),
 ];
