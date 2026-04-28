@@ -1,7 +1,9 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams } from 'next/navigation';
+import Link from 'next/link';
+import { useMSWReady } from '@/components/MSWProvider';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import CategoryIcon from '@mui/icons-material/Category';
@@ -10,13 +12,14 @@ import type { Article } from '@/types/news';
 
 
 export default function ArticlePage() {
+  const mswReady = useMSWReady();
   const { slug } = useParams<{ slug: string }>();
-  const router = useRouter();
   const [article, setArticle] = useState<Article | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
 
   useEffect(() => {
+    if (!mswReady) return;
     fetch(`/api/news/${slug}`)
       .then((res) => {
         if (res.status === 404) {
@@ -29,7 +32,7 @@ export default function ArticlePage() {
         if (data) setArticle(data);
       })
       .finally(() => setIsLoading(false));
-  }, [slug]);
+  }, [slug, mswReady]);
 
   const formattedDate = article
     ? new Date(article.date).toLocaleDateString('pt-BR', {
@@ -42,13 +45,13 @@ export default function ArticlePage() {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
       <main className="mx-auto max-w-3xl px-4 py-8">
-        <button
-          onClick={() => router.back()}
+        <Link
+          href="/"
           className="mb-6 flex items-center gap-1 rounded-lg px-2 py-1.5 text-sm text-gray-600 transition-colors hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800"
         >
           <ArrowBackIcon sx={{ fontSize: 18 }} />
           Voltar
-        </button>
+        </Link>
         {isLoading && (
           <div className="space-y-4 animate-pulse">
             <div className="h-8 w-3/4 rounded-lg bg-gray-200 dark:bg-gray-800" />

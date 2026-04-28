@@ -1,6 +1,10 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
+
+const MSWContext = createContext(false);
+
+export const useMSWReady = () => useContext(MSWContext);
 
 export function MSWProvider({ children }: { children: React.ReactNode }) {
   const [ready, setReady] = useState(false);
@@ -13,5 +17,5 @@ export function MSWProvider({ children }: { children: React.ReactNode }) {
 
   if (!ready) return null;
 
-  return <>{children}</>;
+  return <MSWContext.Provider value={ready}>{children}</MSWContext.Provider>;
 }
