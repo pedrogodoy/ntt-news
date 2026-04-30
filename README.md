@@ -4,7 +4,7 @@ Um site de notícias moderno e responsivo desenvolvido com tecnologias web de po
 
 ## 📖 Descrição
 
-O **NTT News** é uma aplicação web para visualização e filtragem de notícias. O projeto oferece uma interface intuitiva e amigável para explorar notícias por categorias, com foco em performance e experiência do usuário.
+O **NTT News** é uma aplicação web para visualização e filtragem de notícias. O projeto oferece uma interface intuitiva e amigável para explorar notícias por categorias, com foco em performance e experiência.
 
 ## 🛠️ Tecnologias
 
