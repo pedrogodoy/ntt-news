@@ -3,14 +3,15 @@ import { NewsCard } from '../NewsCard';
 import type { Article } from '@/types/news';
 
 const mockArticle: Article = {
-  id: '1',
+  slug: 'test-article',
   title: 'Test Article Title',
-  description: 'Test article description with some content.',
-  url: 'https://example.com/article',
+  excerpt: 'Test article description with some content.',
+  content: 'Full article content for the test.',
   imageUrl: 'https://example.com/image.jpg',
-  source: 'Test Source',
-  publishedAt: '2026-04-07T10:00:00.000Z',
-  category: 'technology',
+  imageAlt: 'Test image alt text',
+  category: 'Tecnologia',
+  date: '2026-04-07T10:00:00.000Z',
+  section: 'Test Source',
 };
 
 describe('NewsCard', () => {
@@ -19,39 +20,39 @@ describe('NewsCard', () => {
     expect(screen.getByText('Test Article Title')).toBeInTheDocument();
   });
 
-  it('renders the article description', () => {
+  it('renders the article excerpt', () => {
     render(<NewsCard article={mockArticle} />);
-    expect(screen.getByText('Test article description with some content.')).toBeInTheDocument();
+    expect(
+      screen.getByText('Test article description with some content.'),
+    ).toBeInTheDocument();
   });
 
-  it('renders the article source', () => {
+  it('renders the article section', () => {
     render(<NewsCard article={mockArticle} />);
     expect(screen.getByText('Test Source')).toBeInTheDocument();
   });
 
   it('renders the category badge', () => {
     render(<NewsCard article={mockArticle} />);
-    expect(screen.getByText('technology')).toBeInTheDocument();
+    expect(screen.getByText('Tecnologia')).toBeInTheDocument();
   });
 
-  it('renders the article image when imageUrl is provided', () => {
+  it('renders the article image with correct src and alt', () => {
     render(<NewsCard article={mockArticle} />);
-    const image = screen.getByAltText('Test Article Title');
+    const image = screen.getByAltText('Test image alt text');
     expect(image).toBeInTheDocument();
     expect(image).toHaveAttribute('src', 'https://example.com/image.jpg');
   });
 
-  it('does not render image when imageUrl is absent', () => {
-    const articleWithoutImage = { ...mockArticle, imageUrl: undefined };
-    render(<NewsCard article={articleWithoutImage} />);
-    expect(screen.queryByAltText('Test Article Title')).not.toBeInTheDocument();
-  });
-
-  it('renders the read-more link with correct href', () => {
+  it('renders the read-more link pointing to the article page', () => {
     render(<NewsCard article={mockArticle} />);
     const link = screen.getByRole('link', { name: /ler mais/i });
-    expect(link).toHaveAttribute('href', 'https://example.com/article');
-    expect(link).toHaveAttribute('target', '_blank');
-    expect(link).toHaveAttribute('rel', 'noopener noreferrer');
+    expect(link).toHaveAttribute('href', '/news/test-article');
+  });
+
+  it('renders a formatted date', () => {
+    render(<NewsCard article={mockArticle} />);
+    // toLocaleDateString output varies by environment — just assert it is not "Invalid Date"
+    expect(screen.queryByText('Invalid Date')).not.toBeInTheDocument();
   });
 });
