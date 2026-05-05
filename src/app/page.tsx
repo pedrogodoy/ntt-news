@@ -6,17 +6,20 @@ import SearchIcon from '@mui/icons-material/Search';
 import { NewsCard } from '@/components/NewsCard';
 import { NewsCardSkeleton } from '@/components/NewsCardSkeleton';
 import { CategoryFilter } from '@/components/CategoryFilter';
+import { useMSWReady } from '@/components/MSWProvider';
 import type { Article } from '@/types/news';
 
 type Category = Article['category'] | 'all';
 
 export default function NewsPage() {
+  const mswReady = useMSWReady();
   const [articles, setArticles] = useState<Article[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<Category>('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    if (!mswReady) return;
     setIsLoading(true);
 
     const params = new URLSearchParams();
@@ -26,7 +29,7 @@ export default function NewsPage() {
       .then((res) => res.json())
       .then((data) => setArticles(data.articles))
       .finally(() => setIsLoading(false));
-  }, [selectedCategory]);
+  }, [selectedCategory, mswReady]);
 
   const filteredArticles = articles.filter(
     (article) =>
@@ -52,10 +55,12 @@ export default function NewsPage() {
           <CategoryFilter selected={selectedCategory} onChange={setSelectedCategory} />
         </div>
 
-        <p className="mb-4 text-sm text-gray-500 dark:text-gray-400">
-          {filteredArticles.length} notícia{filteredArticles.length !== 1 ? 's' : ''} encontrada
-          {filteredArticles.length !== 1 ? 's' : ''}
-        </p>
+        {!isLoading && (
+          <p className="mb-4 text-sm text-gray-500 dark:text-gray-400">
+            {filteredArticles.length} notícia{filteredArticles.length !== 1 ? 's' : ''} encontrada
+            {filteredArticles.length !== 1 ? 's' : ''}
+          </p>
+        )}
 
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {isLoading
